@@ -1,6 +1,6 @@
 {
   "name": "@dawizz/vue-markdown-editor",
-  "version": "1.7.12",
+  "version": "1.7.13",
   "description": "Vue Markdown Editor",
   "main": "lib/base-editor.js",
   "unpkg": "lib/base-editor.js",
@@ -94,11 +94,10 @@
     "highlight.js": "^10.7.3",
     "insert-text-at-cursor": "^0.3.0",
     "katex": "^0.16.4",
-    "markdown-it": "^12.3.2",
+    "markdown-it": "^13.0.1",
     "markdown-it-attrs": "^4.1.6",
     "markdown-it-container": "^3.0.0",
-    "markdown-it-emoji": "1.4.0",
-    "mermaid": "^8.14.0",
+    "markdown-it-emoji": "^2.0.2",
     "prismjs": "^1.29.0",
     "resize-observer-polyfill": "^1.5.1",
     "xss": "^1.0.14"
