@@ -20,11 +20,6 @@
     "build:theme": "webpack --config build/webpack.theme.js",
     "build:pkg": "npm run build:entry && webpack --config build/webpack.pkg.js && npm run build:theme && npm run build:utils"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.md": [
       "prettier --write"
