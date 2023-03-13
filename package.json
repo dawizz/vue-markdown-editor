@@ -38,7 +38,6 @@
     "vue-template-compiler": "^2.7.14"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.36.0",
     "@babel/cli": "7.21.0",
     "@babel/core": "7.21.0",
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
