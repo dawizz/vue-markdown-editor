@@ -1,6 +1,6 @@
 {
   "name": "@dawizz/vue-markdown-editor",
-  "version": "1.7.13",
+  "version": "1.7.14",
   "description": "Vue Markdown Editor",
   "main": "lib/base-editor.js",
   "unpkg": "lib/base-editor.js",
