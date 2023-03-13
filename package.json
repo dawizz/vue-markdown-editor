@@ -93,6 +93,11 @@
     "webpack-dev-server": "3.11.3",
     "webpack-merge": "^4.2.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dawizz/vue-markdown-editor.git"
+  },
+  "homepage": "https://github.com/dawizz/vue-markdown-editor#readme",
   "author": "",
   "license": "MIT",
   "dependencies": {
