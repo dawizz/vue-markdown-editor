@@ -1,9 +1,9 @@
-const path = require('path');
-const merge = require('webpack-merge');
-const getBaseConfig = require('./webpack.base');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const cssnano = require('cssnano');
+const path = require('path')
+const merge = require('webpack-merge')
+const getBaseConfig = require('./webpack.base')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const cssnano = require('cssnano')
 
 module.exports = merge(getBaseConfig({ useCssExtract: true }), {
   mode: 'production',
@@ -12,7 +12,7 @@ module.exports = merge(getBaseConfig({ useCssExtract: true }), {
     hljs: './src/theme/base/highlight',
     prism: './src/theme/base/prism',
     github: './src/theme/github/index',
-    vuepress: './src/theme/vuepress/index',
+    vuepress: './src/theme/vuepress/index'
   },
   output: {
     library: 'VMdTheme',
@@ -21,10 +21,10 @@ module.exports = merge(getBaseConfig({ useCssExtract: true }), {
     path: path.join(__dirname, '../lib/theme'),
     umdNamedDefine: true,
     filename: '[name].js',
-    globalObject: "typeof self !== 'undefined' ? self : this",
+    globalObject: "typeof self !== 'undefined' ? self : this"
   },
   optimization: {
-    minimize: true,
+    minimize: true
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -32,9 +32,9 @@ module.exports = merge(getBaseConfig({ useCssExtract: true }), {
       assetNameRegExp: /\.css$/g,
       cssProcessor: cssnano,
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
+        preset: ['default', { discardComments: { removeAll: true } }]
       },
-      canPrint: true,
-    }),
-  ],
-});
+      canPrint: true
+    })
+  ]
+})

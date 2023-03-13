@@ -1,28 +1,28 @@
-const { VueLoaderPlugin } = require('vue-loader');
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { VueLoaderPlugin } = require('vue-loader')
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = function getBaseConfig(config = {}) {
-  const backendLoader = config.useCssExtract ? MiniCssExtractPlugin.loader : 'style-loader';
+module.exports = function getBaseConfig (config = {}) {
+  const backendLoader = config.useCssExtract ? MiniCssExtractPlugin.loader : 'style-loader'
 
   const defaultConfig = {
     resolve: {
       extensions: ['.js', '.vue', '.css'],
       alias: {
-        '@': path.join(__dirname, '../src'),
-      },
+        '@': path.join(__dirname, '../src')
+      }
     },
     module: {
       rules: [
         {
           test: /\.css/,
           sideEffects: true,
-          use: [backendLoader, 'css-loader', 'postcss-loader'],
+          use: [backendLoader, 'css-loader', 'postcss-loader']
         },
         {
           test: /\.scss/,
           sideEffects: true,
-          use: [backendLoader, 'css-loader', 'postcss-loader', 'sass-loader'],
+          use: [backendLoader, 'css-loader', 'postcss-loader', 'sass-loader']
         },
         {
           test: /\.vue$/,
@@ -31,11 +31,11 @@ module.exports = function getBaseConfig(config = {}) {
               loader: 'vue-loader',
               options: {
                 compilerOptions: {
-                  preserveWhitespace: false,
-                },
-              },
-            },
-          ],
+                  preserveWhitespace: false
+                }
+              }
+            }
+          ]
         },
         {
           test: /\.(js)$/,
@@ -44,9 +44,9 @@ module.exports = function getBaseConfig(config = {}) {
             loader: 'babel-loader',
             // enable sub-packages to find babel config
             options: {
-              rootMode: 'upward',
-            },
-          },
+              rootMode: 'upward'
+            }
+          }
         },
         {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -54,21 +54,21 @@ module.exports = function getBaseConfig(config = {}) {
           options: {
             limit: 10000,
             publicPath: '../',
-            name: 'fonts/[name].[hash:7].[ext]',
-          },
-        },
-      ],
+            name: 'fonts/[name].[hash:7].[ext]'
+          }
+        }
+      ]
     },
-    plugins: [new VueLoaderPlugin()],
-  };
+    plugins: [new VueLoaderPlugin()]
+  }
 
   if (config.useCssExtract) {
     defaultConfig.plugins.push(
       new MiniCssExtractPlugin({
-        filename: 'style/[name].css',
+        filename: 'style/[name].css'
       })
-    );
+    )
   }
 
-  return defaultConfig;
-};
+  return defaultConfig
+}
