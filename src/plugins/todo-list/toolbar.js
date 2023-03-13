@@ -1,10 +1,10 @@
-export default function createToolbar({ commandName, text, title, icon }) {
+export default function createToolbar ({ commandName, text, title, icon }) {
   return {
     title,
     icon,
     text,
-    action(editor) {
-      editor.execCommand(commandName, { type: 'todo' });
-    },
-  };
+    action (editor) {
+      editor.execCommand(commandName, { type: 'todo' })
+    }
+  }
 }

@@ -50,8 +50,8 @@ export const keyCodesToName = {
   120: 'F9',
   121: 'F10',
   122: 'F11',
-  123: 'F12',
-};
+  123: 'F12'
+}
 
 export const keyNames = {
   esc: ['Esc', 'Escape'],
@@ -62,5 +62,5 @@ export const keyNames = {
   left: ['Left', 'ArrowLeft'],
   right: ['Right', 'ArrowRight'],
   down: ['Down', 'ArrowDown'],
-  delete: ['Backspace', 'Delete', 'Del'],
-};
+  delete: ['Backspace', 'Delete', 'Del']
+}

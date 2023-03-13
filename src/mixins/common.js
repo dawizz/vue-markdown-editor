@@ -1,12 +1,12 @@
 // base css
-import '@/styles/index.scss';
+import '@/styles/index.scss'
 
-import Preview from '@/preview';
-import Container from '@/components/container';
-import Scrollbar from '@/components/scrollbar/index';
-import TocNav from '@/components/toc-nav';
+import Preview from '@/preview'
+import Container from '@/components/container'
+import Scrollbar from '@/components/scrollbar/index'
+import TocNav from '@/components/toc-nav'
 
-import EDITOR_MODE from '@/utils/constants/editor-mode';
+import EDITOR_MODE from '@/utils/constants/editor-mode'
 
 export default {
   inheritAttrs: false,
@@ -14,12 +14,12 @@ export default {
     [Preview.name]: Preview,
     [Container.name]: Container,
     [Scrollbar.name]: Scrollbar,
-    [TocNav.name]: TocNav,
+    [TocNav.name]: TocNav
   },
-  provide() {
+  provide () {
     return {
-      markdownEditor: this,
-    };
+      markdownEditor: this
+    }
   },
   props: {
     height: String,
@@ -27,75 +27,71 @@ export default {
     themeConfig: Object,
     mode: {
       type: String,
-      default: EDITOR_MODE.EDITABLE,
+      default: EDITOR_MODE.EDITABLE
     },
     autofocus: Boolean,
     placeholder: String,
     tabSize: {
       type: Number,
-      default: 2,
+      default: 2
     },
-    tocNavPositionRight: Boolean,
+    tocNavPositionRight: Boolean
   },
-  data() {
+  data () {
     return {
       currentMode: this.mode,
-      uploadConfig: {},
-    };
-  },
-  watch: {
-    mode() {
-      this.currentMode = this.mode;
-    },
-    currentMode() {
-      if (this.currentMode === EDITOR_MODE.EDITABLE && this.enableSyncScroll) {
-        this.$nextTick(this.previewSyncScroll);
-      }
-    },
-  },
-  created() {
-    if (this.theme) this.$options.use(this.theme, this.themeConfig);
-  },
-  computed: {
-    isPreviewMode() {
-      return this.currentMode === EDITOR_MODE.PREVIEW;
-    },
-    isEditMode() {
-      return this.currentMode === EDITOR_MODE.EDIT;
-    },
-  },
-  mounted() {
-    if (this.autofocus) {
-      this.$nextTick(this.setFocusEnd);
+      uploadConfig: {}
     }
   },
+  watch: {
+    mode () {
+      this.currentMode = this.mode
+    },
+    currentMode () {
+      if (this.currentMode === EDITOR_MODE.EDITABLE && this.enableSyncScroll) { this.$nextTick(this.previewSyncScroll) }
+    }
+  },
+  created () {
+    if (this.theme) { this.$options.use(this.theme, this.themeConfig) }
+  },
+  computed: {
+    isPreviewMode () {
+      return this.currentMode === EDITOR_MODE.PREVIEW
+    },
+    isEditMode () {
+      return this.currentMode === EDITOR_MODE.EDIT
+    }
+  },
+  mounted () {
+    if (this.autofocus) { this.$nextTick(this.setFocusEnd) }
+  },
   methods: {
-    setFocusEnd() {
-      this.editorFocusEnd();
-      this.editorScrollToTop(9999);
-      this.previewScrollTo(9999);
+    setFocusEnd () {
+      this.editorFocusEnd()
+      this.editorScrollToTop(9999)
+      this.previewScrollTo(9999)
     },
     // change event
-    handleChange(text, html) {
-      this.$emit('change', text, html);
+    handleChange (text, html) {
+      this.$emit('change', text, html)
     },
-    handlePreviewImageClick(images, currentIndex) {
-      this.$emit('image-click', images, currentIndex);
+    handlePreviewImageClick (images, currentIndex) {
+      this.$emit('image-click', images, currentIndex)
     },
-    save() {
-      this.$emit('save', this.text, this.$refs.preview.html);
+    save () {
+      this.$emit('save', this.text, this.$refs.preview.html)
     },
-    insert(getInsertContent) {
-      this.focus();
+    insert (getInsertContent) {
+      this.focus()
 
-      const currentSelectedStr = this.getCurrentSelectedStr();
-      const { selected, text } = getInsertContent(currentSelectedStr);
+      const currentSelectedStr = this.getCurrentSelectedStr()
+      const { selected, text } = getInsertContent(currentSelectedStr)
 
-      this.replaceSelectionText(text);
+      this.replaceSelectionText(text)
 
       this.$nextTick(() => {
-        this.changeSelctionTo(text, selected);
-      });
-    },
-  },
-};
+        this.changeSelctionTo(text, selected)
+      })
+    }
+  }
+}

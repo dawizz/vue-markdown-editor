@@ -1,11 +1,11 @@
-import markdownItHighlightLines from '@/utils/markdown-it-highlight-lines';
+import markdownItHighlightLines from '@/utils/markdown-it-highlight-lines'
 
 export default function () {
   return {
-    install(VMdEditor) {
+    install (VMdEditor) {
       VMdEditor.extendMarkdown((mdParser) => {
-        mdParser.use(markdownItHighlightLines);
-      });
-    },
-  };
+        mdParser.use(markdownItHighlightLines)
+      })
+    }
+  }
 }

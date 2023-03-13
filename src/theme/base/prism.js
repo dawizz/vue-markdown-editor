@@ -1,32 +1,32 @@
-import createBaseTheme from './base';
-import { createHighlightRender } from '@/utils/markdown-it';
+import createBaseTheme from './base'
+import { createHighlightRender } from '@/utils/markdown-it'
 
-export default function createPrismTheme({
+export default function createPrismTheme ({
   Prism,
   baseConfig,
   codeBlockClass,
-  codeHighlightExtensionMap = {},
+  codeHighlightExtensionMap = {}
 } = {}) {
-  const baseTheme = createBaseTheme(baseConfig);
+  const baseTheme = createBaseTheme(baseConfig)
 
   baseTheme.extend((md) => {
     md.set({
       highlight: createHighlightRender({
         codeHighlightExtensionMap,
-        hasLang: (lang) => Prism.languages[lang],
+        hasLang: lang => Prism.languages[lang],
         codeBlockClass,
-        highlight: (str, lang) => Prism.highlight(str, Prism.languages[lang], lang),
-      }),
-    });
-  });
+        highlight: (str, lang) => Prism.highlight(str, Prism.languages[lang], lang)
+      })
+    })
+  })
 
   return {
     previewClass: 'markdown-body',
-    extend(callback) {
+    extend (callback) {
       baseTheme.extend((...arg) => {
-        callback(...arg, Prism);
-      });
+        callback(...arg, Prism)
+      })
     },
-    markdownParser: baseTheme.markdownParser,
-  };
+    markdownParser: baseTheme.markdownParser
+  }
 }

@@ -1,10 +1,10 @@
-export default function commandHandler(editor, emojiType) {
+export default function commandHandler (editor, emojiType) {
   editor.insert(() => {
-    const prefix = ':';
-    const suffix = ':';
+    const prefix = ':'
+    const suffix = ':'
 
     return {
-      text: `${prefix}${emojiType}${suffix}`,
-    };
-  });
+      text: `${prefix}${emojiType}${suffix}`
+    }
+  })
 }

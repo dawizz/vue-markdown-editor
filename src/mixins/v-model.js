@@ -2,18 +2,18 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
-  data() {
+  data () {
     return {
-      text: this.value,
-    };
+      text: this.value
+    }
   },
   methods: {
-    handleInput(val) {
-      this.text = val;
-      this.$emit('input', val);
-    },
-  },
-};
+    handleInput (val) {
+      this.text = val
+      this.$emit('input', val)
+    }
+  }
+}

@@ -5,13 +5,15 @@
 
 ## Fork notice and future plans
 
-- This version is only a fork of the original project with upgraded modules (and security fixes).
+- This version is only a fork of the original project with upgraded modules (and security fixes)
 
-- In the future, the idea is also to upgrade Webpack/Vite.
+- In the future, the idea is also to upgrade Webpack/Vite
 
-- We'll probably use [unplugin-icons](https://github.com/antfu/unplugin-icons).
+- We'll probably use [unplugin-icons](https://github.com/antfu/unplugin-icons)
 
-- Node 12 will be upgraded to Node 16.
+- Node 12 will be upgraded to Node 16
+
+- Mermaid support is removed
 
 ## Install
 

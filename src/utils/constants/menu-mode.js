@@ -1,4 +1,4 @@
 export default {
   LIST: 'list',
-  PANEL: 'panel',
-};
+  PANEL: 'panel'
+}

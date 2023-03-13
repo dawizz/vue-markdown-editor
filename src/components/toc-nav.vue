@@ -1,30 +1,31 @@
+<script>
+export default {
+  name: 'TocNav',
+  props: {
+    titles: Array,
+    indent: {
+      type: Number,
+      default: 16
+    }
+  }
+}
+</script>
+
 <template>
   <ul class="v-md-editor__toc-nav">
     <li
-      :style="{
-        paddingLeft: `${indent * (item.indent)}px`
-      }"
-      @click="$emit('nav-click', item)"
-      class="v-md-editor__toc-nav-item"
       v-for="item in titles"
+      :key="'toc-nav-' + item.id"
+      :style="{
+        paddingLeft: `${indent * (item.indent)}px`,
+      }"
+      class="v-md-editor__toc-nav-item"
+      @click="$emit('nav-click', item)"
     >
       <span class="v-md-editor__toc-nav-title">{{ item.title }}</span>
     </li>
   </ul>
 </template>
-
-<script>
-export default {
-  name: 'toc-nav',
-  props: {
-    titles: Array,
-    indent: {
-      type: Number,
-      default: 16,
-    },
-  },
-};
-</script>
 
 <style lang="scss">
 @import '@/styles/var';

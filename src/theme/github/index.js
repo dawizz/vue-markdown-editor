@@ -1,21 +1,21 @@
-import createGithubTheme from './theme';
+import createGithubTheme from './theme'
 
 // style
-import '@/assets/css/theme/base';
-import '@/assets/css/theme/github-markdown';
+import '@/assets/css/theme/base'
+import '@/assets/css/theme/github-markdown'
 
 const install = function (VMdEditor, options = {}) {
-  const { extend, config, codeHighlightExtensionMap, Hljs } = options;
+  const { extend, config, codeHighlightExtensionMap, Hljs } = options
   const theme = createGithubTheme({
     Hljs,
     baseConfig: config,
-    codeHighlightExtensionMap,
-  });
+    codeHighlightExtensionMap
+  })
 
-  if (extend) theme.extend(extend);
-  VMdEditor.theme(theme);
-};
+  if (extend) { theme.extend(extend) }
+  VMdEditor.theme(theme)
+}
 
 export default {
-  install,
-};
+  install
+}

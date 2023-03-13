@@ -72,5 +72,5 @@ export default {
   tspan: [],
   use: [],
   view: [],
-  vkern: [],
-};
+  vkern: []
+}

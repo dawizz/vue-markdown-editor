@@ -25,5 +25,5 @@ export default {
   mstyle: [],
   mpadded: [],
   mphantom: [],
-  mglyph: [],
-};
+  mglyph: []
+}

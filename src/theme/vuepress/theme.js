@@ -1,23 +1,23 @@
-import createPrismTheme from '@/theme/base/prism';
+import createPrismTheme from '@/theme/base/prism'
 
-export default function createVuepressTheme(config) {
+export default function createVuepressTheme (config) {
   const prismTheme = createPrismTheme({
     Prism: config.Prism,
     codeHighlightExtensionMap: config.codeHighlightExtensionMap || {},
-    codeBlockClass: config.codeBlockClass || ((lang) => `v-md-prism-${lang}`),
+    codeBlockClass: config.codeBlockClass || (lang => `v-md-prism-${lang}`),
     baseConfig: {
       link: {
-        openLinkIcon: true,
+        openLinkIcon: true
       },
-      ...config.baseConfig,
-    },
-  });
+      ...config.baseConfig
+    }
+  })
 
   return {
     previewClass: 'vuepress-markdown-body',
-    extend(callback) {
-      prismTheme.extend(callback);
+    extend (callback) {
+      prismTheme.extend(callback)
     },
-    markdownParser: prismTheme.markdownParser,
-  };
+    markdownParser: prismTheme.markdownParser
+  }
 }

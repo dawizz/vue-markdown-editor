@@ -1,82 +1,78 @@
-import { LINE_MARKUP } from '@/utils/constants/markup';
+import { LINE_MARKUP } from '@/utils/constants/markup'
 
 export default {
-  data() {
+  data () {
     return {
-      enableSyncScroll: true,
-    };
+      enableSyncScroll: true
+    }
   },
   methods: {
-    toggleSyncScroll(isEnable = !this.enableSyncScroll) {
-      this.enableSyncScroll = isEnable;
+    toggleSyncScroll (isEnable = !this.enableSyncScroll) {
+      this.enableSyncScroll = isEnable
 
-      if (isEnable) this.previewSyncScroll();
+      if (isEnable) { this.previewSyncScroll() }
     },
-    previewSyncScroll() {
-      if (this.isEditMode) return;
+    previewSyncScroll () {
+      if (this.isEditMode) { return }
 
-      const previewEl = this.$refs.preview.$el;
-      const previewScrollerEl = this.$refs.previewScroller.$el;
-      const previewLines = previewEl.querySelectorAll(`[${LINE_MARKUP}]`);
+      const previewEl = this.$refs.preview.$el
+      const previewScrollerEl = this.$refs.previewScroller.$el
+      const previewLines = previewEl.querySelectorAll(`[${LINE_MARKUP}]`)
       const {
         clientHeight: editorClientHeight,
         top: editorScrollTop,
-        height: editorScrollHeight,
-      } = this.getScrollInfo();
-      const previewScrollWrapper = previewScrollerEl.querySelector('.scrollbar__wrap');
+        height: editorScrollHeight
+      } = this.getScrollInfo()
+      const previewScrollWrapper = previewScrollerEl.querySelector('.scrollbar__wrap')
 
       if (editorClientHeight + editorScrollTop === editorScrollHeight) {
-        const { clientHeight } = previewScrollWrapper;
-        const { scrollHeight } = previewScrollWrapper;
+        const { clientHeight } = previewScrollWrapper
+        const { scrollHeight } = previewScrollWrapper
 
-        this.previewScrollTo(scrollHeight - clientHeight);
+        this.previewScrollTo(scrollHeight - clientHeight)
       } else {
-        let currentLine;
-        let nextLine;
+        let currentLine
+        let nextLine
 
         for (let i = 0; i < previewLines.length; i++) {
-          const lineNumber = previewLines[i].getAttribute(LINE_MARKUP);
-          const height = this.heightAtLine(lineNumber - 1, 'local');
+          const lineNumber = previewLines[i].getAttribute(LINE_MARKUP)
+          const height = this.heightAtLine(lineNumber - 1, 'local')
 
           if (height < editorScrollTop) {
-            currentLine = lineNumber;
+            currentLine = lineNumber
           } else {
-            nextLine = lineNumber;
-            break;
+            nextLine = lineNumber
+            break
           }
         }
 
-        let percent = 0;
+        let percent = 0
 
         if (currentLine && nextLine && currentLine !== nextLine) {
-          const currentLineTop = this.heightAtLine(currentLine - 1, 'local');
-          const nextLineTop = this.heightAtLine(nextLine - 1, 'local');
+          const currentLineTop = this.heightAtLine(currentLine - 1, 'local')
+          const nextLineTop = this.heightAtLine(nextLine - 1, 'local')
 
-          percent = (editorScrollTop - currentLineTop) / (nextLineTop - currentLineTop);
+          percent = (editorScrollTop - currentLineTop) / (nextLineTop - currentLineTop)
         }
 
-        let newLineTop = 0;
-        let newNextLineTop = previewScrollWrapper.scrollHeight - previewScrollWrapper.clientHeight;
+        let newLineTop = 0
+        let newNextLineTop = previewScrollWrapper.scrollHeight - previewScrollWrapper.clientHeight
 
-        if (currentLine) {
-          newLineTop = previewEl.querySelector(`[${LINE_MARKUP}="${currentLine}"]`).offsetTop;
-        }
+        if (currentLine) { newLineTop = previewEl.querySelector(`[${LINE_MARKUP}="${currentLine}"]`).offsetTop }
 
-        if (nextLine) {
-          newNextLineTop = previewEl.querySelector(`[${LINE_MARKUP}="${nextLine}"]`).offsetTop;
-        }
+        if (nextLine) { newNextLineTop = previewEl.querySelector(`[${LINE_MARKUP}="${nextLine}"]`).offsetTop }
 
-        const newScrollTop = newLineTop + (newNextLineTop - newLineTop) * percent;
+        const newScrollTop = newLineTop + (newNextLineTop - newLineTop) * percent
 
-        this.previewScrollTo(newScrollTop);
+        this.previewScrollTo(newScrollTop)
       }
     },
-    handleEditorScroll() {
-      if (!this.enableSyncScroll || this.ignoreSyncScroll) return;
+    handleEditorScroll () {
+      if (!this.enableSyncScroll || this.ignoreSyncScroll) { return }
 
-      clearTimeout(this.scrollTimmer);
+      clearTimeout(this.scrollTimmer)
 
-      this.scrollTimmer = setTimeout(this.previewSyncScroll, 60);
-    },
-  },
-};
+      this.scrollTimmer = setTimeout(this.previewSyncScroll, 60)
+    }
+  }
+}

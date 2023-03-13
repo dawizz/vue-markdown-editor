@@ -1,93 +1,93 @@
-import markdownItContainer from '@/utils/markdown-it-container';
+import markdownItContainer from '@/utils/markdown-it-container'
 
-export default function createTipPlugin({ name = 'tip', icon = 'v-md-icon-tip', text } = {}) {
+export default function createTipPlugin ({ name = 'tip', icon = 'v-md-icon-tip', text } = {}) {
   const commandHandler = function (editor, type = 'tip') {
     editor.insert((selected) => {
-      const prefix = ':::';
-      const suffix = ':::';
-      const content = selected || editor.langConfig.tip[type].placeholder;
+      const prefix = ':::'
+      const suffix = ':::'
+      const content = selected || editor.langConfig.tip[type].placeholder
 
       return {
         text: `${prefix} ${type}\n  ${content}\n${suffix}`,
-        selected: content,
-      };
-    });
-  };
+        selected: content
+      }
+    })
+  }
 
   const toolbar = {
-    title: (editor) => editor.langConfig.tip.toolbar,
+    title: editor => editor.langConfig.tip.toolbar,
     icon,
     text,
     menus: [
       {
         name: 'tip',
-        text: (editor) => editor.langConfig.tip.tip.toolbar,
-        action(editor) {
-          editor.execCommand(name);
-        },
+        text: editor => editor.langConfig.tip.tip.toolbar,
+        action (editor) {
+          editor.execCommand(name)
+        }
       },
       {
         name: 'warning',
-        text: (editor) => editor.langConfig.tip.warning.toolbar,
-        action(editor) {
-          editor.execCommand(name, 'warning');
-        },
+        text: editor => editor.langConfig.tip.warning.toolbar,
+        action (editor) {
+          editor.execCommand(name, 'warning')
+        }
       },
       {
         name: 'danger',
-        text: (editor) => editor.langConfig.tip.danger.toolbar,
-        action(editor) {
-          editor.execCommand(name, 'danger');
-        },
+        text: editor => editor.langConfig.tip.danger.toolbar,
+        action (editor) {
+          editor.execCommand(name, 'danger')
+        }
       },
       {
         name: 'details',
-        text: (editor) => editor.langConfig.tip.details.toolbar,
-        action(editor) {
-          editor.execCommand(name, 'details');
-        },
-      },
-    ],
-  };
+        text: editor => editor.langConfig.tip.details.toolbar,
+        action (editor) {
+          editor.execCommand(name, 'details')
+        }
+      }
+    ]
+  }
 
   const extendMarkdown = function (mdParser, getLangConfig) {
-    const blockClass = 'v-md-plugin-tip';
+    const blockClass = 'v-md-plugin-tip'
 
     if (mdParser) {
       // extend markdown-it
       markdownItContainer(mdParser, {
         type: 'tip',
         defaultTitle: () => getLangConfig().tip.tip.defaultTitle,
-        blockClass,
-      });
+        blockClass
+      })
 
       markdownItContainer(mdParser, {
         type: 'warning',
         defaultTitle: () => getLangConfig().tip.warning.defaultTitle,
-        blockClass,
-      });
+        blockClass
+      })
 
       markdownItContainer(mdParser, {
         type: 'danger',
         defaultTitle: () => getLangConfig().tip.danger.defaultTitle,
-        blockClass,
-      });
+        blockClass
+      })
 
       markdownItContainer(mdParser, {
         type: 'details',
         defaultTitle: () => getLangConfig().tip.details.defaultTitle,
-        before: (info) =>
+        before: info =>
           `<details class="${blockClass} details">${info ? `<summary>${info}</summary>` : ''}\n`,
-        after: () => '</details>\n',
-      });
+        after: () => '</details>\n'
+      })
     }
-  };
+  }
 
   return {
-    install(VMdEditor) {
+    install (VMdEditor) {
       if (VMdEditor.name === 'v-md-editor') {
-        VMdEditor.command(name, commandHandler);
-        VMdEditor.toolbar(name, toolbar);
+        VMdEditor.command(name, commandHandler)
+        VMdEditor.toolbar(name, toolbar)
       }
 
       VMdEditor.lang.add({
@@ -97,24 +97,24 @@ export default function createTipPlugin({ name = 'tip', icon = 'v-md-icon-tip', 
             tip: {
               toolbar: '提示',
               defaultTitle: '提示',
-              placeholder: '在此输入内容',
+              placeholder: '在此输入内容'
             },
             warning: {
               toolbar: '注意',
               defaultTitle: '注意',
-              placeholder: '在此输入内容',
+              placeholder: '在此输入内容'
             },
             danger: {
               toolbar: '警告',
               defaultTitle: '警告',
-              placeholder: '在此输入内容',
+              placeholder: '在此输入内容'
             },
             details: {
               toolbar: '详细信息',
               defaultTitle: '详细信息',
-              placeholder: '内容',
-            },
-          },
+              placeholder: '内容'
+            }
+          }
         },
         'en-US': {
           tip: {
@@ -122,28 +122,28 @@ export default function createTipPlugin({ name = 'tip', icon = 'v-md-icon-tip', 
             tip: {
               toolbar: 'Tip',
               defaultTitle: 'TIP',
-              placeholder: 'Insert content',
+              placeholder: 'Insert content'
             },
             warning: {
               toolbar: 'Warning',
               defaultTitle: 'WARNING',
-              placeholder: 'Insert content',
+              placeholder: 'Insert content'
             },
             danger: {
               toolbar: 'Danger',
               defaultTitle: 'DANGER',
-              placeholder: 'Insert content',
+              placeholder: 'Insert content'
             },
             details: {
               toolbar: 'Details',
               defaultTitle: 'DETAILS',
-              placeholder: 'Content',
-            },
-          },
-        },
-      });
+              placeholder: 'Content'
+            }
+          }
+        }
+      })
 
-      VMdEditor.extendMarkdown(extendMarkdown);
-    },
-  };
+      VMdEditor.extendMarkdown(extendMarkdown)
+    }
+  }
 }

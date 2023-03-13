@@ -1,4 +1,4 @@
-import creator from './creator';
-import katex from 'katex';
+import katex from 'katex'
+import creator from './creator'
 
-export default creator(katex);
+export default creator(katex)

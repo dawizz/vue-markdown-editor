@@ -1,14 +1,14 @@
-import markdownItCopyCode from '@/utils/markdown-it-copy-code';
-import createCopyCodePreview from './preview';
+import createCopyCodePreview from './preview'
+import markdownItCopyCode from '@/utils/markdown-it-copy-code'
 
-export default function createCopyCodePlugin() {
+export default function createCopyCodePlugin () {
   return {
-    install(VMdEditor) {
+    install (VMdEditor) {
       VMdEditor.extendMarkdown((mdParser) => {
-        mdParser.use(markdownItCopyCode);
-      });
+        mdParser.use(markdownItCopyCode)
+      })
 
-      VMdEditor.use(createCopyCodePreview());
-    },
-  };
+      VMdEditor.use(createCopyCodePreview())
+    }
+  }
 }

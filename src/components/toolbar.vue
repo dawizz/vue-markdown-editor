@@ -1,3 +1,37 @@
+<script>
+import ToolbarItem from '@/components/toolbar-item/index'
+
+export default {
+  name: 'EditorToolbar',
+  components: {
+    [ToolbarItem.name]: ToolbarItem
+  },
+  inject: ['markdownEditor'],
+  props: {
+    groups: {
+      type: Array,
+      default: () => []
+    },
+    toolbars: {
+      type: Object,
+      default: () => ({})
+    },
+    disabledMenus: {
+      type: Array,
+      default: () => []
+    }
+  },
+  methods: {
+    getConfig (toolbarName, configName) {
+      const toolbarConfig = this.toolbars[toolbarName]
+      const value = toolbarConfig[configName]
+
+      return typeof value === 'function' ? value(this.markdownEditor) : value
+    }
+  }
+}
+</script>
+
 <template>
   <ul v-if="groups.length">
     <template v-for="(group, idx) in groups">
@@ -8,7 +42,7 @@
         :title="getConfig(toolbarName, 'title')"
         :icon="getConfig(toolbarName, 'icon')"
         :text="getConfig(toolbarName, 'text')"
-        :active="getConfig(toolbarName,'active')"
+        :active="getConfig(toolbarName, 'active')"
         :menus="getConfig(toolbarName, 'menus')"
         :disabled-menus="disabledMenus"
         @click="$emit('item-click', toolbars[toolbarName])"
@@ -16,36 +50,12 @@
       />
       <li
         v-if="idx !== groups.length - 1"
+        :key="'li-divider-' + idx"
         class="v-md-editor__toolbar-divider"
       />
     </template>
   </ul>
 </template>
-
-<script>
-import ToolbarItem from '@/components/toolbar-item/index';
-
-export default {
-  name: 'editor-toolbar',
-  inject: ['markdownEditor'],
-  components: {
-    [ToolbarItem.name]: ToolbarItem,
-  },
-  props: {
-    groups: Array,
-    toolbars: Object,
-    disabledMenus: Array,
-  },
-  methods: {
-    getConfig(toolbarName, configName) {
-      const toolbarConfig = this.toolbars[toolbarName];
-      const value = toolbarConfig[configName];
-
-      return typeof value === 'function' ? value(this.markdownEditor) : value;
-    },
-  },
-};
-</script>
 
 <style lang="scss">
 @import '@/styles/var';

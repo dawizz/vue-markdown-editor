@@ -1,26 +1,26 @@
 export default function (md, { lineMarkup = 'data-line' } = {}) {
   const defaultRender = function (tokens, idx, options, env, self) {
-    return self.renderToken(tokens, idx, options);
-  };
-
-  function addAttrwrapper(originalRender) {
-    return function (tokens, idx, options, env, self) {
-      const token = tokens[idx];
-
-      token.attrPush([lineMarkup, token.map[0] + 1]);
-
-      return originalRender(tokens, idx, options, env, self);
-    };
+    return self.renderToken(tokens, idx, options)
   }
 
-  function modifyCodewrapper(originalRender) {
+  function addAttrwrapper (originalRender) {
     return function (tokens, idx, options, env, self) {
-      const rawCode = originalRender(tokens, idx, options, env, self);
-      const token = tokens[idx];
-      const lineNumber = token.map[0] + 1;
+      const token = tokens[idx]
 
-      return `<div ${lineMarkup}="${lineNumber}">${rawCode}</div>`;
-    };
+      token.attrPush([lineMarkup, token.map[0] + 1])
+
+      return originalRender(tokens, idx, options, env, self)
+    }
+  }
+
+  function modifyCodewrapper (originalRender) {
+    return function (tokens, idx, options, env, self) {
+      const rawCode = originalRender(tokens, idx, options, env, self)
+      const token = tokens[idx]
+      const lineNumber = token.map[0] + 1
+
+      return `<div ${lineMarkup}="${lineNumber}">${rawCode}</div>`
+    }
   }
 
   const wrapperMap = {
@@ -35,13 +35,13 @@ export default function (md, { lineMarkup = 'data-line' } = {}) {
     hr: addAttrwrapper,
     html_block: modifyCodewrapper,
     code_block: modifyCodewrapper,
-    fence: modifyCodewrapper,
-  };
+    fence: modifyCodewrapper
+  }
 
   Object.keys(wrapperMap).forEach((ruleName) => {
-    const originalRender = md.renderer.rules[ruleName];
-    const render = originalRender || defaultRender;
+    const originalRender = md.renderer.rules[ruleName]
+    const render = originalRender || defaultRender
 
-    md.renderer.rules[ruleName] = wrapperMap[ruleName](render);
-  });
+    md.renderer.rules[ruleName] = wrapperMap[ruleName](render)
+  })
 }

@@ -1,26 +1,19 @@
-import { isObject } from './util';
+import { isObject } from './util'
 
-const { hasOwnProperty } = Object.prototype;
+const { hasOwnProperty } = Object.prototype
 
-function assignKey(to, from, key) {
-  const val = from[key];
+function assignKey (to, from, key) {
+  const val = from[key]
 
-  if (val === undefined || val === null) {
-    return;
-  }
+  if (val === undefined || val === null) { return }
 
-  if (!hasOwnProperty.call(to, key) || !isObject(val)) {
-    to[key] = val;
-  } else {
-    // eslint-disable-next-line
-    to[key] = deepAssign(Object(to[key]), from[key]);
-  }
+  if (!hasOwnProperty.call(to, key) || !isObject(val)) { to[key] = val } else { to[key] = deepAssign(Object(to[key]), from[key]) }
 }
 
-export function deepAssign(to, from) {
+export function deepAssign (to, from) {
   Object.keys(from).forEach((key) => {
-    assignKey(to, from, key);
-  });
+    assignKey(to, from, key)
+  })
 
-  return to;
+  return to
 }

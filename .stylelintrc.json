@@ -1,7 +1,13 @@
 {
-  "extends": ["@vant/stylelint-config"],
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recommended-vue/scss"
+  ],
   "rules": {
     "at-rule-no-unknown": null,
-    "font-family-no-missing-generic-family-keyword": null
+    "font-family-no-missing-generic-family-keyword": null,
+    "selector-class-pattern": null,
+    "no-descending-specificity": null,
+    "scss/no-global-function-names": null
   }
 }

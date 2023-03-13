@@ -1,3 +1,96 @@
+<script>
+import Toolbar from '@/components/toolbar'
+import { addResizeListener, removeResizeListener } from '@/utils/resize-event'
+import EDITOR_MODE from '@/utils/constants/editor-mode'
+
+export default {
+  name: 'VMdContainer',
+  components: {
+    [Toolbar.name]: Toolbar
+  },
+  props: {
+    leftToolbar: String,
+    rightToolbar: String,
+    toolbars: Object,
+    fullscreen: Boolean,
+    height: String,
+    noresize: Boolean,
+    disabledMenus: Array,
+    leftAreaVisible: Boolean,
+    leftAreaTitle: String,
+    leftAreaWidth: {
+      type: String,
+      default: '200px'
+    },
+    leftAreaReverse: Boolean,
+    mode: {
+      type: String,
+      default: EDITOR_MODE.EDITABLE
+    }
+  },
+  data () {
+    return {
+      toolbarHeight: 41
+    }
+  },
+  computed: {
+    heightGetter () {
+      return this.fullscreen ? 'auto' : this.height
+    },
+    leftToolbarGroup () {
+      return this.getToolbarConfig(this.leftToolbar)
+    },
+    rightToolbarGroup () {
+      return this.getToolbarConfig(this.rightToolbar)
+    },
+    isPreviewMode () {
+      return this.mode === EDITOR_MODE.PREVIEW
+    },
+    isEditMode () {
+      return this.mode === EDITOR_MODE.EDIT
+    }
+  },
+  mounted () {
+    if (!this.noresize) {
+      addResizeListener(this.$refs.editorWrapper, this.handleResize)
+      addResizeListener(this.$refs.toolbarWrapper, this.handleToolbarWrapperResize)
+    }
+  },
+  beforeUnmount () {
+    if (!this.noresize) {
+      removeResizeListener(this.$refs.editorWrapper, this.handleResize)
+      removeResizeListener(this.$refs.toolbarWrapper, this.handleToolbarWrapperResize)
+    }
+  },
+  methods: {
+    handleResize () {
+      this.$emit('resize')
+    },
+    handleToolbarWrapperResize () {
+      const { toolbarWrapper } = this.$refs
+
+      if (toolbarWrapper) { this.toolbarHeight = toolbarWrapper.offsetHeight }
+    },
+    getToolbarConfig (toolbarStr) {
+      return toolbarStr
+        .split('|')
+        .map(group =>
+          group.split(' ').filter(toolbarName => toolbarName && this.toolbars[toolbarName])
+        )
+    },
+    handleEditorWrapperClick (e) {
+      this.$emit('editor-wrapper-click', e)
+    },
+    handleToolbarItemClick (toolbar) {
+      this.$emit('toolbar-item-click', toolbar)
+    },
+    handleToolbarMenuClick (menu) {
+      this.$emit('toolbar-menu-click', menu)
+    }
+  }
+}
+</script>
+
 <template>
   <div
     class="v-md-editor"
@@ -5,8 +98,8 @@
       `v-md-editor--${mode}`,
       {
         'v-md-editor--fullscreen': fullscreen,
-        'v-md-editor--left-area-reverse': leftAreaReverse
-      }
+        'v-md-editor--left-area-reverse': leftAreaReverse,
+      },
     ]"
     :style="{ height: heightGetter }"
   >
@@ -15,7 +108,7 @@
       class="v-md-editor__left-area"
       :style="{
         width: leftAreaVisible ? leftAreaWidth : 0,
-        borderWidth: leftAreaVisible? '1px' : 0
+        borderWidth: leftAreaVisible ? '1px' : 0,
       }"
     >
       <div
@@ -34,8 +127,8 @@
     <div class="v-md-editor__right-area">
       <div
         v-show="!isPreviewMode"
-        class="v-md-editor__toolbar"
         ref="toolbarWrapper"
+        class="v-md-editor__toolbar"
       >
         <editor-toolbar
           class="v-md-editor__toolbar-left"
@@ -56,17 +149,17 @@
       </div>
       <div class="v-md-editor__main">
         <div
+          v-show="!isPreviewMode"
           ref="editorWrapper"
           class="v-md-editor__editor-wrapper"
-          v-show="!isPreviewMode"
           @click="handleEditorWrapperClick"
         >
           <slot name="editor" />
         </div>
         <div
           v-show="!isEditMode"
-          class="v-md-editor__preview-wrapper"
           ref="previewWrapper"
+          class="v-md-editor__preview-wrapper"
         >
           <slot name="preview" />
         </div>
@@ -75,99 +168,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import Toolbar from '@/components/toolbar';
-import { addResizeListener, removeResizeListener } from '@/utils/resize-event';
-import EDITOR_MODE from '@/utils/constants/editor-mode';
-
-export default {
-  name: 'v-md-container',
-  components: {
-    [Toolbar.name]: Toolbar,
-  },
-  props: {
-    leftToolbar: String,
-    rightToolbar: String,
-    toolbars: Object,
-    fullscreen: Boolean,
-    height: String,
-    noresize: Boolean,
-    disabledMenus: Array,
-    leftAreaVisible: Boolean,
-    leftAreaTitle: String,
-    leftAreaWidth: {
-      type: String,
-      default: '200px',
-    },
-    leftAreaReverse: Boolean,
-    mode: {
-      type: String,
-      default: EDITOR_MODE.EDITABLE,
-    },
-  },
-  data() {
-    return {
-      toolbarHeight: 41,
-    };
-  },
-  computed: {
-    heightGetter() {
-      return this.fullscreen ? 'auto' : this.height;
-    },
-    leftToolbarGroup() {
-      return this.getToolbarConfig(this.leftToolbar);
-    },
-    rightToolbarGroup() {
-      return this.getToolbarConfig(this.rightToolbar);
-    },
-    isPreviewMode() {
-      return this.mode === EDITOR_MODE.PREVIEW;
-    },
-    isEditMode() {
-      return this.mode === EDITOR_MODE.EDIT;
-    },
-  },
-  mounted() {
-    if (!this.noresize) {
-      addResizeListener(this.$refs.editorWrapper, this.handleResize);
-      addResizeListener(this.$refs.toolbarWrapper, this.handleToolbarWrapperResize);
-    }
-  },
-  beforeDestroy() {
-    if (!this.noresize) {
-      removeResizeListener(this.$refs.editorWrapper, this.handleResize);
-      removeResizeListener(this.$refs.toolbarWrapper, this.handleToolbarWrapperResize);
-    }
-  },
-  methods: {
-    handleResize() {
-      this.$emit('resize');
-    },
-    handleToolbarWrapperResize() {
-      const { toolbarWrapper } = this.$refs;
-
-      if (toolbarWrapper) this.toolbarHeight = toolbarWrapper.offsetHeight;
-    },
-    getToolbarConfig(toolbarStr) {
-      return toolbarStr
-        .split('|')
-        .map((group) =>
-          group.split(' ').filter((toolbarName) => toolbarName && this.toolbars[toolbarName])
-        );
-    },
-    handleEditorWrapperClick(e) {
-      this.$emit('editor-wrapper-click', e);
-    },
-    handleToolbarItemClick(toolbar) {
-      this.$emit('toolbar-item-click', toolbar);
-    },
-    handleToolbarMenuClick(menu) {
-      this.$emit('toolbar-menu-click', menu);
-    },
-  },
-};
-</script>
 
 <style lang="scss">
 @import '@/styles/var';

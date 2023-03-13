@@ -1,80 +1,78 @@
-import { getScrollTop } from '@/utils/scroll-top';
-import smoothScroll from '@/utils/smooth-scroll';
-import { LINE_MARKUP, HEADING_MARKUP, ANCHOR_MARKUP } from '@/utils/constants/markup';
+import { getScrollTop } from '@/utils/scroll-top'
+import smoothScroll from '@/utils/smooth-scroll'
+import { ANCHOR_MARKUP, HEADING_MARKUP, LINE_MARKUP } from '@/utils/constants/markup'
 
 export default {
   props: {
     scrollContainer: {
       type: Function,
-      default: () => window,
+      default: () => window
     },
     top: {
       type: Number,
-      default: 0,
+      default: 0
     },
     tabSize: {
       type: Number,
-      default: 2,
-    },
+      default: 2
+    }
   },
   methods: {
-    handlePreviewClick(e) {
-      const { target } = e;
+    handlePreviewClick (e) {
+      const { target } = e
 
       // image preview
       if (target.tagName === 'IMG') {
-        const src = target.getAttribute('src');
+        const src = target.getAttribute('src')
 
-        if (!src) return;
+        if (!src) { return }
 
-        const imageEls = Array.from(this.$el.querySelectorAll('img'));
-        const images = imageEls.map((el) => el.getAttribute('src')).filter((src) => src);
-        const imagePreviewInitIndex = imageEls.indexOf(target);
+        const imageEls = Array.from(this.$el.querySelectorAll('img'))
+        const images = imageEls.map(el => el.getAttribute('src')).filter(src => src)
+        const imagePreviewInitIndex = imageEls.indexOf(target)
 
-        this.$emit('image-click', images, imagePreviewInitIndex);
+        this.$emit('image-click', images, imagePreviewInitIndex)
 
-        return;
+        return
       }
 
-      const scrollToTargetId = target.getAttribute(ANCHOR_MARKUP);
-      const scrollToTarget = this.$el.querySelector(`[${HEADING_MARKUP}="${scrollToTargetId}"]`);
+      const scrollToTargetId = target.getAttribute(ANCHOR_MARKUP)
+      const scrollToTarget = this.$el.querySelector(`[${HEADING_MARKUP}="${scrollToTargetId}"]`)
 
       if (scrollToTarget) {
         this.scrollToTarget({
-          target: scrollToTarget,
-        });
+          target: scrollToTarget
+        })
       }
     },
-    getOffsetTop(target, container) {
-      const rect = target.getBoundingClientRect();
+    getOffsetTop (target, container) {
+      const rect = target.getBoundingClientRect()
 
-      if (container === window || container === document.documentElement) {
-        return rect.top;
-      }
+      if (container === window || container === document.documentElement) { return rect.top }
 
-      return rect.top - container.getBoundingClientRect().top;
+      return rect.top - container.getBoundingClientRect().top
     },
-    scrollToTarget({
+    scrollToTarget ({
       target,
       scrollContainer = this.scrollContainer(),
       top = this.top,
-      onScrollEnd,
+      onScrollEnd
     }) {
-      const offsetTop = this.getOffsetTop(target, scrollContainer);
-      const scrollTop = getScrollTop(scrollContainer) + offsetTop - top;
+      const offsetTop = this.getOffsetTop(target, scrollContainer)
+      const scrollTop = getScrollTop(scrollContainer) + offsetTop - top
 
       smoothScroll({
         scrollTarget: scrollContainer,
         scrollToTop: scrollTop,
-        onScrollEnd,
-      });
+        onScrollEnd
+      })
     },
-    scrollToLine({ lineIndex, onScrollEnd }) {
+    scrollToLine ({ lineIndex, onScrollEnd }) {
       if (lineIndex) {
-        const target = this.$el.querySelector(`[${LINE_MARKUP}="${lineIndex}"]`);
+        const target = this.$el.querySelector(`[${LINE_MARKUP}="${lineIndex}"]`)
 
-        if (target) this.scrollToTarget({ target, onScrollEnd });
+        if (target) { this.scrollToTarget({ target, onScrollEnd }) }
       }
-    },
-  },
-};
+    }
+  }
+}

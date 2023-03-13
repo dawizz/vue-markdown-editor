@@ -1,56 +1,54 @@
-import copyToClipboard from 'copy-to-clipboard';
+import copyToClipboard from 'copy-to-clipboard'
 
-function isCopyButton(el) {
-  return el.classList.contains('v-md-copy-code-btn');
+function isCopyButton (el) {
+  return el.classList.contains('v-md-copy-code-btn')
 }
 
-function findCodeWrapperEl(el) {
-  if (el.classList.contains('v-md-pre-wrapper')) {
-    return el;
-  }
+function findCodeWrapperEl (el) {
+  if (el.classList.contains('v-md-pre-wrapper')) { return el }
 
-  return findCodeWrapperEl(el.parentNode);
+  return findCodeWrapperEl(el.parentNode)
 }
 
-function getPreviewEl(el) {
-  const previewElClass = 'v-md-editor-preview';
+function getPreviewEl (el) {
+  const previewElClass = 'v-md-editor-preview'
 
-  return el.classList.contains(previewElClass) ? el : el.querySelector(`.${previewElClass}`);
+  return el.classList.contains(previewElClass) ? el : el.querySelector(`.${previewElClass}`)
 }
 
-export default function createCopyCodePreview() {
+export default function createCopyCodePreview () {
   return {
-    install(VMdEditor) {
-      if (!VMdEditor.mixins) VMdEditor.mixins = [];
+    install (VMdEditor) {
+      if (!VMdEditor.mixins) { VMdEditor.mixins = [] }
 
       VMdEditor.mixins.push({
-        mounted() {
+        mounted () {
           this.$nextTick(() => {
-            const previewEl = getPreviewEl(this.$el);
+            const previewEl = getPreviewEl(this.$el)
 
-            previewEl.addEventListener('click', this.handleCopyCodeClick);
-          });
+            previewEl.addEventListener('click', this.handleCopyCodeClick)
+          })
         },
-        beforeDestroy() {
-          const previewEl = getPreviewEl(this.$el);
+        beforeDestroy () {
+          const previewEl = getPreviewEl(this.$el)
 
-          previewEl.removeEventListener('click', this.handleCopyCodeClick);
+          previewEl.removeEventListener('click', this.handleCopyCodeClick)
         },
         methods: {
-          handleCopyCodeClick({ target }) {
+          handleCopyCodeClick ({ target }) {
             if (isCopyButton(target)) {
-              const codeWrapper = findCodeWrapperEl(target.parentNode);
+              const codeWrapper = findCodeWrapperEl(target.parentNode)
 
               if (codeWrapper) {
-                const code = codeWrapper.querySelector('code').innerText;
+                const code = codeWrapper.querySelector('code').innerText
 
-                copyToClipboard(code);
-                this.$emit('copy-code-success', code);
+                copyToClipboard(code)
+                this.$emit('copy-code-success', code)
               }
             }
-          },
-        },
-      });
-    },
-  };
+          }
+        }
+      })
+    }
+  }
 }

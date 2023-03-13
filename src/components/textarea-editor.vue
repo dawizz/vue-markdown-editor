@@ -1,9 +1,175 @@
+<script>
+import insertTextAtCursor from 'insert-text-at-cursor'
+import Vue from 'vue'
+import HotKeys from '@/utils/hotkeys'
+
+import { isKorean } from '@/utils/util'
+
+Vue.config.keyCodes.z = 90
+Vue.config.keyCodes.y = 89
+
+export default {
+  name: 'VMdTextareaEditor',
+  props: {
+    value: String,
+    placeholder: String,
+    historyDebounce: {
+      type: Number,
+      default: 400
+    },
+    historyMax: {
+      type: Number,
+      default: 30
+    }
+  },
+  data () {
+    return {
+      isComposing: false
+    }
+  },
+  computed: {
+    textareaEl () {
+      return this.$refs.textarea
+    }
+  },
+  watch: {
+    value () {
+      this.clearTimeout()
+
+      if (!this.triggerInputBySetHistory) {
+        this.timmer = setTimeout(() => {
+          this.saveHistory()
+
+          this.clearTimeout()
+        }, this.historyDebounce)
+      }
+    }
+  },
+  created () {
+    this.historyStack = []
+    this.historyIndex = 0
+    this.hotkeysManager = new HotKeys()
+  },
+  mounted () {
+    this.saveHistory()
+
+    this.textareaEl.addEventListener('keydown', this.handleKeydown, false)
+  },
+  beforeUnmount () {
+    this.textareaEl.removeEventListener('keydown', this.handleKeydown, false)
+  },
+  methods: {
+    handleCompositionStart () {
+      this.isComposing = true
+    },
+    handleCompositionUpdate (event) {
+      const text = event.target.value
+      const lastCharacter = text[text.length - 1] || ''
+      this.isComposing = !isKorean(lastCharacter)
+    },
+    handleCompositionEnd (event) {
+      if (this.isComposing) {
+        this.isComposing = false
+        this.handleInput(event)
+      }
+    },
+    handlePaste (e) {
+      this.$emit('paste', e)
+    },
+    registerHotkeys (...arg) {
+      this.hotkeysManager.registerHotkeys(...arg)
+    },
+    handleKeydown (e) {
+      this.hotkeysManager.dispatch(e)
+    },
+    heightAtLine (lineIndex) {
+      const el = this.$el.querySelector(`section[data-line="${lineIndex}"]`)
+
+      return el ? el.offsetTop + el.offsetHeight : 0
+    },
+    clearTimeout () {
+      if (this.timmer) { clearTimeout(this.timmer) }
+
+      this.timmer = null
+    },
+    updateCurrentHistoryRange () {
+      if (!this.timmer) {
+        this.updateHistory(this.historyIndex, {
+          range: this.getRange()
+        })
+      }
+    },
+    handleInput (e) {
+      this.$emit('input', e.target.value)
+    },
+    saveHistory () {
+      const range = this.getRange()
+      const history = {
+        value: this.value,
+        range
+      }
+
+      this.historyStack = this.historyStack.slice(0, this.historyIndex + 1)
+      this.historyStack.push(history)
+      if (this.historyStack.length > this.historyMax) { this.historyStack.shift() }
+      this.historyIndex = this.historyStack.length - 1
+    },
+    updateHistory (index, data) {
+      const history = this.historyStack[index]
+
+      if ('value' in data) { history.value = data.value }
+      Object.assign(history.range, data.range)
+    },
+    goHistory (index) {
+      const { value, range } = this.historyStack[index]
+
+      this.$emit('input', value)
+      this.triggerInputBySetHistory = true
+
+      this.$nextTick(() => {
+        this.triggerInputBySetHistory = false
+        this.setRange(range)
+      })
+    },
+    getRange () {
+      return {
+        start: this.textareaEl.selectionStart,
+        end: this.textareaEl.selectionEnd
+      }
+    },
+    setRange ({ start, end }) {
+      this.textareaEl.setSelectionRange(start, end)
+      this.updateCurrentHistoryRange()
+    },
+    focus () {
+      this.textareaEl.focus()
+    },
+    insertText (text) {
+      insertTextAtCursor(this.textareaEl, text)
+    },
+    undo () {
+      if (this.historyIndex > 0) {
+        this.historyIndex--
+        this.goHistory(this.historyIndex)
+      }
+    },
+    redo () {
+      if (this.historyIndex < this.historyStack.length - 1) {
+        this.historyIndex++
+        this.goHistory(this.historyIndex)
+      }
+    }
+  }
+}
+</script>
+
 <template>
   <div class="v-md-textarea-editor">
     <pre><section
   v-for="(row, idx) in value.split('\n')"
+  :key="'section-' + idx"
   :data-line="idx + 1"
->{{ row || ' ' }}<br /></section></pre>
+>{{ row || ' ' }}<br></section></pre>
     <textarea
       ref="textarea"
       :value="value"
@@ -28,171 +194,6 @@
   </div>
 </template>
 
-<script>
-import insertTextAtCursor from 'insert-text-at-cursor';
-import HotKeys from '@/utils/hotkeys';
-import Vue from 'vue';
-
-import { isKorean } from '@/utils/util';
-
-Vue.config.keyCodes.z = 90;
-Vue.config.keyCodes.y = 89;
-
-export default {
-  name: 'v-md-textarea-editor',
-  props: {
-    value: String,
-    placeholder: String,
-    historyDebounce: {
-      type: Number,
-      default: 400,
-    },
-    historyMax: {
-      type: Number,
-      default: 30,
-    },
-  },
-  data() {
-    return {
-      isComposing: false,
-    };
-  },
-  computed: {
-    textareaEl() {
-      return this.$refs.textarea;
-    },
-  },
-  watch: {
-    value() {
-      this.clearTimeout();
-
-      if (!this.triggerInputBySetHistory) {
-        this.timmer = setTimeout(() => {
-          this.saveHistory();
-
-          this.clearTimeout();
-        }, this.historyDebounce);
-      }
-    },
-  },
-  created() {
-    this.historyStack = [];
-    this.historyIndex = 0;
-    this.hotkeysManager = new HotKeys();
-  },
-  mounted() {
-    this.saveHistory();
-
-    this.textareaEl.addEventListener('keydown', this.handleKeydown, false);
-  },
-  beforeDestroy() {
-    this.textareaEl.removeEventListener('keydown', this.handleKeydown, false);
-  },
-  methods: {
-    handleCompositionStart() {
-      this.isComposing = true;
-    },
-    handleCompositionUpdate(event) {
-      const text = event.target.value;
-      const lastCharacter = text[text.length - 1] || '';
-      this.isComposing = !isKorean(lastCharacter);
-    },
-    handleCompositionEnd(event) {
-      if (this.isComposing) {
-        this.isComposing = false;
-        this.handleInput(event);
-      }
-    },
-    handlePaste(e) {
-      this.$emit('paste', e);
-    },
-    registerHotkeys(...arg) {
-      this.hotkeysManager.registerHotkeys(...arg);
-    },
-    handleKeydown(e) {
-      this.hotkeysManager.dispatch(e);
-    },
-    heightAtLine(lineIndex) {
-      const el = this.$el.querySelector(`section[data-line="${lineIndex}"]`);
-
-      return el ? el.offsetTop + el.offsetHeight : 0;
-    },
-    clearTimeout() {
-      if (this.timmer) clearTimeout(this.timmer);
-
-      this.timmer = null;
-    },
-    updateCurrentHistoryRange() {
-      if (!this.timmer) {
-        this.updateHistory(this.historyIndex, {
-          range: this.getRange(),
-        });
-      }
-    },
-    handleInput(e) {
-      this.$emit('input', e.target.value);
-    },
-    saveHistory() {
-      const range = this.getRange();
-      const history = {
-        value: this.value,
-        range,
-      };
-
-      this.historyStack = this.historyStack.slice(0, this.historyIndex + 1);
-      this.historyStack.push(history);
-      if (this.historyStack.length > this.historyMax) this.historyStack.shift();
-      this.historyIndex = this.historyStack.length - 1;
-    },
-    updateHistory(index, data) {
-      const history = this.historyStack[index];
-
-      if ('value' in data) history.value = data.value;
-      Object.assign(history.range, data.range);
-    },
-    goHistory(index) {
-      const { value, range } = this.historyStack[index];
-
-      this.$emit('input', value);
-      this.triggerInputBySetHistory = true;
-
-      this.$nextTick(() => {
-        this.triggerInputBySetHistory = false;
-        this.setRange(range);
-      });
-    },
-    getRange() {
-      return {
-        start: this.textareaEl.selectionStart,
-        end: this.textareaEl.selectionEnd,
-      };
-    },
-    setRange({ start, end }) {
-      this.textareaEl.setSelectionRange(start, end);
-      this.updateCurrentHistoryRange();
-    },
-    focus() {
-      this.textareaEl.focus();
-    },
-    insertText(text) {
-      insertTextAtCursor(this.textareaEl, text);
-    },
-    undo() {
-      if (this.historyIndex > 0) {
-        this.historyIndex--;
-        this.goHistory(this.historyIndex);
-      }
-    },
-    redo() {
-      if (this.historyIndex < this.historyStack.length - 1) {
-        this.historyIndex++;
-        this.goHistory(this.historyIndex);
-      }
-    },
-  },
-};
-</script>
-
 <style lang="scss">
 @import '@/styles/var';
 
@@ -214,6 +215,7 @@ export default {
     margin: 0;
     white-space: pre-wrap;
     visibility: hidden;
+
     @include common;
   }
 
@@ -226,6 +228,7 @@ export default {
     border: none;
     outline: none;
     resize: none;
+
     @include common;
 
     &::placeholder {
