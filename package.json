@@ -1,6 +1,6 @@
 {
   "name": "@dawizz/vue-markdown-editor",
-  "version": "1.7.15",
+  "version": "1.7.16",
   "description": "Vue Markdown Editor",
   "main": "lib/base-editor.js",
   "unpkg": "lib/base-editor.js",
@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "npm run build:entry && webpack-dev-server --config build/webpack.dev.js",
     "lint-staged": "lint-staged",
-    "lint": "eslint ./src --ext .js,.vue,.ts,.tsx --fix && stylelint \"src/**/*.vue\" --fix",
+    "lint": "eslint . --ext .js,.vue,.ts,.tsx --fix && stylelint \"src/**/*.vue\" --fix",
     "build:entry": "node build/build-entry.js",
     "build:utils": "node build/build-utils.js",
     "build:theme": "webpack --config build/webpack.theme.js",
