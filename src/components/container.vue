@@ -142,7 +142,7 @@ export default {
           class="v-md-editor__toolbar-right"
           :groups="rightToolbarGroup"
           :toolbars="toolbars"
-          :disabled-mens="disabledMenus"
+          :disabled-menus="disabledMenus"
           @item-click="handleToolbarItemClick"
           @toolbar-menu-click="handleToolbarMenuClick"
         />
